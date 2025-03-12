@@ -10,6 +10,7 @@ public class XArrayList<T> implements XList<T>{
 
     private static final int DEFAULT_CAPACITY = 10;
     private static final int CAPACITY_MULTIPLE = 2;
+
     //새로운 요소가 추가될 인덱스
     private int nowIndex;
     Object[] data;
@@ -37,9 +38,8 @@ public class XArrayList<T> implements XList<T>{
         isValidElement(element);
         if (isFull()) {
             expandsCapacity();
-        } else {
-            data[nowIndex++] = element;
         }
+        data[nowIndex++] = element;
     }
 
     @Override
