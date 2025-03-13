@@ -2,6 +2,7 @@ package array.arraycopy;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 public class XArrays {
@@ -18,8 +19,6 @@ public class XArrays {
         for (int i = 0; i < source.length; i++) {
             target[i] = source[i];
         }
-        System.out.println(source.getClass());
-        System.out.println(source.getClass().getComponentType());
         return target;
     }
 
@@ -64,5 +63,53 @@ public class XArrays {
         return target;
     }
 
+    public static Object[] deepCopy(Object[] source) {
+        if (source == null) {
+            throw new NullPointerException();
+        }
+
+        Object[] destination = new Object[source.length];
+        for (int i = 0; i < source.length; i++) {
+            if (source[i] != null && source[i].getClass().isArray()) {
+                // :rocket: 원본 배열의 타입 유지하면서 새로운 배열 생성
+                destination[i] = deepCopyArray(source[i]);
+            } else {
+                destination[i] = source[i]; // 기본 복사
+            }
+        }
+
+        return destination;
+    }
+
+    private static Object deepCopyArray(Object array) {
+        int length = Array.getLength(array);
+
+        Object copiedArray = Array.newInstance(array.getClass().getComponentType(), length);
+
+        for (int i = 0; i < length; i++) {
+            Object element = Array.get(array, i);
+
+            if (element != null && element.getClass().isArray()) {
+                // 재귀적으로 배열 복사
+                Array.set(copiedArray, i, deepCopyArray(element));
+            } else {
+                Array.set(copiedArray, i, element);
+            }
+        }
+
+        return copiedArray;
+    }
+
+    public static Object[] deepCopy2(Object[] source) {
+        if (source == null) {
+            throw new NullPointerException();
+        }
+        Object[] destination = new Object[source.length];
+        while(source.length > 0) {
+            destination[source.length - 1] = source[source.length - 1];
+            source = Arrays.copyOf(source, source.length - 1);
+        }
+        return destination;
+    }
 
 }
